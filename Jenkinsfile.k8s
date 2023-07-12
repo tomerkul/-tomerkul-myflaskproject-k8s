@@ -42,61 +42,9 @@ pipeline {
                 }
             }
         }
-        stage('Installing the dependencies') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
-                    sshagent(['SSH_VM']) {
-                        sh '''
-                            
-                            ssh-keyscan $ANSIBLE_IP >> /var/lib/jenkins/.ssh/known_hosts
-                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE tomer@$ANSIBLE_IP '
-                                   cd /home/tomer/myflaskproject/sample-flask
-                                   sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no -rp docker-compose.yaml ec2-user@$TEST_IP:/home/ec2-user
-                                   sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no -rp docker-compose.yaml ec2-user@$DEPLOY_IP:/home/ec2-user
-                                   cd /etc/ansible
-                                   ansible-playbook -i aws_ec2.yml docker-dependency.yml
-                                '
-                        '''
-                    }
-                }
-            }
-        }
-        stage('testing') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
-                    sh '''
-                        ls
-                        pwd
-                        ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
-                        sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp /var/lib/jenkins/workspace/first_pipeline-docker/myflaskproject/sample-flask/db/pulllatestSQL.py /var/lib/jenkins/workspace/first_pipeline-docker/myflaskproject/sample-flask/pulllatest.py ec2-user@$TEST_IP:/home/ec2-user/
-                        ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$TEST_IP '
-                               docker stop $(docker ps -q --filter "expose=5000")
-                               docker pull tomerkul/mysql:latest
-                               docker pull tomerkul/myflask:latest
-                               docker-compose up -d
-                               docker-compose down
-                               sleep 15
-                               curl "http://3.95.193.151:5000"
-                            '
-                    '''
-                }
-            }
-        }
-        stage('DEPLOY') {
+        stage('Testing') {
                     steps {
-                        withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
-                            sh '''
-                                ssh-keyscan $DEPLOY_IP >> /var/lib/jenkins/.ssh/known_hosts
-                                sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp /var/lib/jenkins/workspace/first_pipeline-docker/myflaskproject/sample-flask/db/pulllatestSQL.py /var/lib/jenkins/workspace/first_pipeline-docker/myflaskproject/sample-flask/pulllatest.py ec2-user@$DEPLOY_IP:/home/ec2-user/
-                                ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$DEPLOY_IP '
-                                       docker stop $(docker ps -q --filter "expose=5000") 
-                                       docker pull tomerkul/mysql:latest
-                                       docker pull tomerkul/myflask:latest
-                                       docker-compose down
-                                       docker-compose up -d
-                                    '
-                            '''
-                        }
+                        
                     }
                 }
     }
