@@ -44,7 +44,7 @@ pipeline {
         }
         stage('Testing') {
                     steps {
-                        
+                        sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/-tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
                     }
                 }
     }
