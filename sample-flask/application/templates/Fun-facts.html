@@ -41,7 +41,9 @@
     <div id="fun-facts-image">
         <div>
             <h1>Fascinating Fun Facts about the Solar System</h1>
-            <p>Did you know that Jupiter has the shortest day of any planet, completing one rotation in about 9 hours and 55 minutes? Or that there is a volcano on Mars called Olympus Mons, which is the tallest volcano in the solar system? Explore more intriguing fun facts about our cosmic neighborhood!</p>
+            {% for fact in facts %}
+            <p>{{ fact }}</p>
+            {% endfor %}
         </div>
     </div>
 </body>
