@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import os
 import mysql.connector
+import random
 
 app = Flask(__name__)
 db_host = "db"  # MySQL host
@@ -58,7 +59,7 @@ def get_fun_facts():
     cursor.execute("SELECT fun_facts FROM solar_system")
     facts = cursor.fetchall()
     conn.close()
-    return [fact[0] for fact in facts]
+    return random.choice(facts)[0] if facts else ""
 
 @app.route("/")
 def hello_world():
