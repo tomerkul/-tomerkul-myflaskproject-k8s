@@ -51,6 +51,20 @@
         section {
             margin-bottom: 20px;
             color: #fff;
+            position: relative;
+            perspective: 800px;
+            transform-style: preserve-3d;
+        }
+        
+        .cube {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg) rotateY(15deg);
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
         footer {
@@ -58,6 +72,19 @@
             color: #fff;
             padding: 10px;
             text-align: center;
+        }
+        
+        /* Brick Pattern Background */
+        body {
+            background-color: #D3D3D3;
+            background-image: 
+                linear-gradient(45deg, #FF5733 25%, transparent 25%, transparent 50%, #FF5733 50%, #FF5733),
+                linear-gradient(45deg, #FFC300 25%, transparent 25%, transparent 50%, #FFC300 50%, #FFC300),
+                linear-gradient(45deg, #C70039 25%, transparent 25%, transparent 50%, #C70039 50%, #C70039),
+                linear-gradient(45deg, #900C3F 25%, transparent 25%, transparent 50%, #900C3F 50%, #900C3F),
+                linear-gradient(45deg, #581845 25%, transparent 25%, transparent 50%, #581845 50%, #581845);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 0, 20px -20px, 0 20px, -20px 20px;
         }
     </style>
 </head>
@@ -67,36 +94,45 @@
     </header>
 
     <nav>
-    <ul>
-        <li><a href="/sun">The Sun</a></li>
-        <li><a href="/the-planets">The Planets</a></li>
-        <li><a href="/dwarf-planets">Dwarf Planets</a></li>
-        <li><a href="/moons">Moons</a></li>
-        <li><a href="/exploration">Exploration</a></li>
-        <li><a href="/fun-facts">Fun Facts</a></li>
-    </ul>
-</nav>
+        <ul>
+            <li><a href="/sun">The Sun</a></li>
+            <li><a href="/the-planets">The Planets</a></li>
+            <li><a href="/dwarf-planets">Dwarf Planets</a></li>
+            <li><a href="/moons">Moons</a></li>
+            <li><a href="/exploration">Exploration</a></li>
+            <li><a href="/fun-facts">Fun Facts</a></li>
+        </ul>
+    </nav>
 
     <main class="orange-bg">
-        <section id="section1">
+        <section id="section1" class="cube">
             <h2>The Sun - Our Dazzling Star</h2>
             <p>The Sun is the star at the center of the Solar System. It is a nearly perfect sphere of hot plasma, with internal convective motion that generates a magnetic field via a dynamo process.</p>
         </section>
 
-        <section id="section2">
+        <section id="section2" class="cube">
             <h2>The Planets - A Diverse Family</h2>
             <p>The Solar System consists of eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Each planet has unique characteristics and offers a fascinating glimpse into the diversity of our celestial neighbors.</p>
         </section>
 
-        <section id="section3">
+        <section id="section3" class="cube">
             <h2>Dwarf Planets and Other Celestial Objects</h2>
             <p>In addition to the planets, the Solar System is also home to several dwarf planets such as Pluto, Ceres, Haumea, Makemake, and Eris. These objects share similarities with planets but have not cleared their orbits.</p>
         </section>
 
-        <section id="section4">
+        <section id="section4" class="cube">
             <h2>Moons - Worlds in Orbit</h2>
-            <p>Many celestial bodies in the Solar System have moons orbiting around them. For example, Earth has one moon, while Jupiter, the largest planet, has 79
-	<section id="section6">
-    	    <h2>Fun Facts</h2>
-   	    <p>Number of enters: {{ count }}</p>
-	</section>
+            <p>Many celestial bodies in the Solar System have moons orbiting around them. For example, Earth has one moon, while Jupiter, the largest planet, has 79.</p>
+        </section>
+
+        <section id="section6" class="cube">
+            <h2>Fun Facts</h2>
+            <p>Number of entries: {{ count }}</p>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2023 Explore the Solar System
+    </footer>
+</body>
+</html>
