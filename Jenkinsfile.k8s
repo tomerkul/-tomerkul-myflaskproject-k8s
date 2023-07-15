@@ -43,23 +43,10 @@ pipeline {
             }
         }
         stage('Testing') {
-                            steps {
-                                withCredentials([sshUserPrivateKey(credentialsId: 'Win10', keyFileVariable: 'KEY_FILE')]) {
-                    sshagent(['Win10']) {
-                        sh '''
-                            
-                            ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
-                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE tom@$TEST_IP '
-                                  kubectl proxy --address='0.0.0.0' --port=8080 --accept-hosts='.*'
-                                '
-                        '''
-                    }
-                }
-                            }
-                        }
-        stage('Testing') {
                     steps {
                         sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/-tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
+                        sh 'sleep 60'
+                        sh 'curl "$TEST_IP:5000"'
                     }
                 }
     }
