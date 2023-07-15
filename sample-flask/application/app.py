@@ -1,7 +1,7 @@
+import random
 from flask import Flask, render_template
 import os
 import mysql.connector
-import random
 
 app = Flask(__name__)
 db_host = "db"  # MySQL host
@@ -94,4 +94,6 @@ def fun_facts():
     fact_sentences = [fact[0] for fact in random_facts]
     return render_template("Fun-facts.html", facts=fact_sentences)
 
+if __name__ == "__main__":
+    execute_init_script()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
