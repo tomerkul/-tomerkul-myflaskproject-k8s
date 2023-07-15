@@ -81,7 +81,7 @@ def the_planets():
 
 @app.route("/dwarf-planets")
 def dwarf_planets():
-    return render_template("Dwarf-planets.html")
+    return render_template("dwarf-planets.html")
 
 @app.route("/exploration")
 def exploration():
