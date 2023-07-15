@@ -46,13 +46,26 @@ def get_visit_count():
     conn.close()
     return count[0] if count else 0
 
+# Function to retrieve the fun facts from the database
+def get_fun_facts():
+    conn = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT fun_facts FROM solar_system")
+    facts = cursor.fetchall()
+    conn.close()
+    return [fact[0] for fact in facts]
 
 @app.route("/")
 def hello_world():
     increment_visit_count()
     count = get_visit_count()
     return render_template("index.html", count=count)
-    
+
 @app.route("/sun")
 def sun():
     return render_template("sun.html")
@@ -75,7 +88,8 @@ def exploration():
 
 @app.route("/fun-facts")
 def fun_facts():
-    return render_template("Fun-facts.html")
+    facts = get_fun_facts()
+    return render_template("Fun-facts.html", facts=facts)
 
 if __name__ == "__main__":
     execute_init_script()
