@@ -91,9 +91,7 @@ def exploration():
 def fun_facts():
     facts = get_fun_facts()
     random_facts = random.sample(facts, k=5) if len(facts) >= 5 else facts
-    fact_sentence = ", ".join(fact[0] for fact in random_facts)
-    return render_template("Fun-facts.html", facts=fact_sentence)
-if __name__ == "__main__":
-    execute_init_script()
+    fact_sentences = [fact[0] for fact in random_facts]
+    return render_template("Fun-facts.html", facts=fact_sentences)
 
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
