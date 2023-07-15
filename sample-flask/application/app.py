@@ -52,6 +52,30 @@ def hello_world():
     increment_visit_count()
     count = get_visit_count()
     return render_template("index.html", count=count)
+    
+@app.route("/sun")
+def sun():
+    return render_template("sun.html")
+
+@app.route("/moons")
+def moons():
+    return render_template("moons.html")
+
+@app.route("/the-planets")
+def the_planets():
+    return render_template("The-planets.html")
+
+@app.route("/dwarf-planets")
+def dwarf_planets():
+    return render_template("Dwarf-planets.html")
+
+@app.route("/exploration")
+def exploration():
+    return render_template("Exploration.html")
+
+@app.route("/fun-facts")
+def fun_facts():
+    return render_template("Fun-facts.html")
 
 if __name__ == "__main__":
     execute_init_script()
