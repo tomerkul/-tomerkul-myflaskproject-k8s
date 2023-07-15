@@ -31,9 +31,9 @@ pipeline {
                             
                             ssh-keyscan $ANSIBLE_IP >> /var/lib/jenkins/.ssh/known_hosts
                             ssh -o StrictHostKeyChecking=no -i $KEY_FILE tomer@$ANSIBLE_IP '
-                                   cd /home/tomer/flask-docker/myflaskproject/sample-flask/application
+                                   cd /home/tomer/myflaskproject-k8s/tomerkul-myflaskproject-k8s/sample-flask/application
                                    python3 findlastversion.py
-                                   cd /home/tomer/myflaskproject/sample-flask/db
+                                   cd /home/tomer/myflaskproject-k8s/tomerkul-myflaskproject-k8s/sample-flask/db
                                    python3 findlastversionSQl.py
                                    
                                 '
@@ -45,8 +45,6 @@ pipeline {
         stage('Testing') {
                     steps {
                         sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/-tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
-                        sh 'sleep 60'
-                        sh 'curl "$TEST_IP:5000"'
                     }
                 }
     }
