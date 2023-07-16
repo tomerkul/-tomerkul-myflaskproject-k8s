@@ -12,13 +12,14 @@ pipeline {
                     env.DEPLOY_IP = "54.236.77.39"
                 }
                 sh 'echo "Performing cleanup..."'
+                sh 'mv -tomerkul-myflaskproject-k8s.git tomerkul-myflaskproject-k8s.git'
                 sh 'sudo rm -rf *'
             }
         }
         stage('Clone') {
             steps {
                 sh 'echo "Building..."'
-                sh 'git clone https://github.com/tomerkul/-tomerkul-myflaskproject-k8s.git'
+                sh 'git clone https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git'
                 sh 'ls'
             }
         }
