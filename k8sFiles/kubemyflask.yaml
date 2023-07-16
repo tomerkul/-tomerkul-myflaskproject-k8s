@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-deployment
+  name: App-deployment
 spec:
   replicas: 1
   selector:
@@ -31,7 +31,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-flask-app-service-with-db
+  name: S-my-flask-app-service-with-db
 spec:
   selector:
     app: my-flask-app-with-db
@@ -45,7 +45,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-deployment
+  name: SQL-DB-deployment
 spec:
   replicas: 1
   selector:
