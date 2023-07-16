@@ -7,9 +7,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    env.TEST_IP = "172.28.112.1"
                     env.ANSIBLE_IP = "192.168.56.101"
-                    env.DEPLOY_IP = "54.236.77.39"
                 }
                 sh 'echo "Performing cleanup..."'
                 sh 'pwd'
