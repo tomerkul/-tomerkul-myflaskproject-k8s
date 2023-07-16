@@ -14,10 +14,10 @@ spec:
     spec:
       restartPolicy: Always
       containers:
-        - name: db-container
-          image: tomerkul/mysql:latest
+        - name: app-container
+          image: tomerkul/myflask:latest
           ports:
-            - containerPort: 3306
+            - containerPort: 5000
           env:
             - name: MYSQL_DATABASE
               value: "develop"
