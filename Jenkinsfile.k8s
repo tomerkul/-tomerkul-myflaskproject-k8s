@@ -43,6 +43,14 @@ pipeline {
         }
         stage('Testing') {
                     steps {
+                        sh 'kubectl config use-context rancher-desktop'
+                        sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
+                    }
+                }
+        stage('Deploying') {
+                    steps {
+                        sh 'gcloud config set project macro-aurora-393206'
+                        sh 'gcloud container clusters get-credentials deploy-cluster-1 --zone ZONE_NAME --project My First Project'
                         sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
                     }
                 }
