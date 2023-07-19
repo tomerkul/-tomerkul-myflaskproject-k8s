@@ -9,6 +9,17 @@ db_user = "tomer"  # MySQL username
 db_password = "1234"  # MySQL password
 db_name = "develop"  # MySQL database name
 
+# Function to execute the init.sql file
+def execute_init_script():
+    conn = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name
+    )
+    cursor = conn.cursor()
+    print("connected")
+
 # Function to increment the visit count
 def increment_visit_count():
     conn = mysql.connector.connect(
@@ -33,6 +44,7 @@ def get_visit_count():
     cursor = conn.cursor()
     cursor.execute("SELECT count FROM visits")
     count = cursor.fetchone()
+    conn.close()
     return count[0] if count else 0
 
 # Function to retrieve the fun facts from the database
@@ -46,6 +58,7 @@ def get_fun_facts():
     cursor = conn.cursor()
     cursor.execute("SELECT fun_facts FROM solar_system")
     facts = cursor.fetchall()
+    conn.close()
     return facts
 
 @app.route("/")
