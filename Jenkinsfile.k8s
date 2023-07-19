@@ -25,11 +25,11 @@ pipeline {
         stage('Upload to Docker Hub') {
             steps {
                         sh '''
-                                   sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
+                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
                                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application
-                                   sudo python3 findlastversion.py
+                                   python3 findlastversion.py
                                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db
-                                   sudo python3 findlastversionSQl.py
+                                   python3 findlastversionSQl.py
                         '''
                     
                 
