@@ -3,7 +3,11 @@ import docker
 client = docker.from_env()
 images = client.images.list()
 
-existing_versions = [float(image.tags[0].split(":")[1]) for image in images if image.tags and image.tags[0].startswith("tomerkul/mysql:")]
+existing_versions = []
+for image in images:
+    if image.tags and image.tags[0].startswith("tomerkul/mysql:") and image.tags[0] != "tomerkul/mysql:latest":
+        version_str = image.tags[0].split(":")[1]
+        existing_versions.append(float(version_str))
 
 if existing_versions:
     latest_version = max(existing_versions)
