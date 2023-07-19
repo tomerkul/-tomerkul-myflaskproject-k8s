@@ -54,6 +54,7 @@ pipeline {
                             sudo rm -rf tomerkul-myflaskproject-k8s
                             git clone https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git
                             kubectl apply -f /home/tomerkulish/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                            kubectl rollout restart deployments
                             EOF
                         '''
     }
