@@ -1,5 +1,5 @@
 import random
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response
 import os
 import mysql.connector
 
@@ -90,6 +90,9 @@ def exploration():
 @app.route("/fun-facts")
 def fun_facts():
     facts = get_fun_facts()
+    if facts is None:
+        return make_response("Please wait a sec and try again", 500)
+    
     random_facts = random.sample(facts, k=5) if len(facts) >= 5 else facts
     fact_sentences = [fact[0] for fact in random_facts]
     return render_template("Fun-facts.html", facts=fact_sentences)
