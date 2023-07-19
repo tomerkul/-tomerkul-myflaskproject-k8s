@@ -24,21 +24,14 @@ pipeline {
 
         stage('Upload to Docker Hub') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
-                    sshagent(['SSH_VM']) {
                         sh '''
-                            
-                            ssh-keyscan $ANSIBLE_IP >> /var/lib/jenkins/.ssh/known_hosts
-                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE tomer@$ANSIBLE_IP '
                                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application
                                    python3 findlastversion.py
                                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db
                                    python3 findlastversionSQl.py
-                                   
-                                '
                         '''
-                    }
-                }
+                    
+                
             }
         }
         stage('Testing') {
