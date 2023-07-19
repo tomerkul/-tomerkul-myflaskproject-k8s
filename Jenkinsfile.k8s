@@ -50,12 +50,9 @@ pipeline {
         stage('Deploying') {
                     steps {
                         sh '''
-                            gcloud cloud-shell ssh << EOF
-                            sudo rm -rf tomerkul-myflaskproject-k8s
-                            git clone https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git
-                            kubectl apply -f /home/tomerkulish/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                            gcloud config set project macro-aurora-393206
+                            kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
                             kubectl rollout restart deployments
-                            EOF
                         '''
     }
 }
