@@ -5,7 +5,7 @@ images = client.images.list()
 
 existing_versions = []
 for image in images:
-    if image.tags and image.tags[0].startswith("tomerkul/flask:") and image.tags[0] != "tomerkul/myflask:latest":
+    if image.tags and image.tags[0].startswith("tomerkul/myflask:") and image.tags[0] != "tomerkul/myflask:latest":
         version_str = image.tags[0].split(":")[1]
         existing_versions.append(float(version_str))
 
