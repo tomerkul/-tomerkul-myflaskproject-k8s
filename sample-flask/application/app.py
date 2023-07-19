@@ -95,4 +95,5 @@ def fun_facts():
     return render_template("Fun-facts.html", facts=fact_sentences)
 
 if __name__ == "__main__":
+    execute_init_script()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
