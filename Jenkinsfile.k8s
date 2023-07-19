@@ -49,10 +49,15 @@ pipeline {
                 }
         stage('Deploying') {
                     steps {
-                        sh 'gcloud config set project macro-aurora-393206'
-                        sh 'gcloud container clusters get-credentials deploy-cluster-1 --zone us-east1 --project macro-aurora-393206'
-                        sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
-                    }
-                }
+                        sh '''
+                            gcloud cloud-shell ssh << EOF
+                            sudo rm -rf tomerkul-myflaskproject-k8s
+                            git clone https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git
+                            kubectl apply -f /home/tomerkulish/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                            EOF
+                        '''
+    }
+}
+
     }
 }
