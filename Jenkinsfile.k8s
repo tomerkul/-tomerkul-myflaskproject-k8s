@@ -24,53 +24,46 @@ pipeline {
 
         stage('Upload to Docker Hub') {
             steps {
-                        sh ''' 
-                                   sudo systemctl restart docker.service docker.socket
-                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
-                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application/
-                                   python3 findlastversion.py
-                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db/
-                                   python3 findlastversionSQl.py
-                        '''
-                    
-                
+                sh ''' 
+                    sudo systemctl restart docker.service docker.socket
+                    python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
+                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application/
+                    python3 findlastversion.py
+                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db/
+                    python3 findlastversionSQl.py
+                '''
             }
         }
         stage('Upload to Testing server') {
-                    steps {
-                        sh 'kubectl config use-context rancher-desktop'
-                        sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
-                        sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
-                        sh 'kubectl rollout restart deployments'
-                    }
-                }
-        stage('Testing') {
-            withCredentials([sshUserPrivateKey(credentialsId: 'Win10', keyFileVariable: 'KEY_FILE')]) {
-                sshagent(['Win10']) {
-                    steps {
-                        sh '''
-                            ssh -i -o StrictHostKeyChecking=no $KEY_FILE tom@$WIN10 '
-                            curl "http://172.20.192.1:5000"
-
-
-                    '
-
-
-                        '''
-                    }
-                }
+            steps {
+                sh 'kubectl config use-context rancher-desktop'
+                sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
+                sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
+                sh 'kubectl rollout restart deployments'
+            }
         }
-    }
+        stage('Testing') {
+            environment {
+                KEY_FILE = credentials('Win10')
+            }
+            steps {
+                script {
+                    WIN10 = "172.20.192.1"
+                    sh """
+                        ssh -i ${KEY_FILE} -o StrictHostKeyChecking=no tom@${WIN10} 'curl "http://172.20.192.1:5000"'
+                    """
+                }
+            }
+        }
         stage('Deploy') {
-                    steps {
-                        sh '''
-                            gcloud config set project macro-aurora-393206
-                            sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
-                            kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
-                            kubectl rollout restart deployments
-                        '''
-    }
-}
-
+            steps {
+                sh '''
+                    gcloud config set project macro-aurora-393206
+                    sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
+                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                    kubectl rollout restart deployments
+                '''
+            }
+        }
     }
 }
