@@ -38,8 +38,8 @@ pipeline {
         stage('Testing') {
                     steps {
                         sh 'kubectl config use-context rancher-desktop'
-                        sh 'cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/'
-                        sh 'ls'
+                        sh 'cd tomerkul-myflaskproject-k8s/k8sFiles/'
+                        sh 'sudo python3 highestnum.py'
                         sh 'kubectl apply -f kubemyflask.yaml'
                         sh 'kubectl rollout restart deployments'
                     }
