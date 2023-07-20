@@ -8,6 +8,7 @@ pipeline {
             steps {
                 script {
                     env.ANSIBLE_IP = "192.168.56.101"
+                    env.WIN10 = "172.20.192.1"
                 }
                 sh 'echo "Performing cleanup..."'
                 sh 'sudo rm -rf *'
@@ -35,7 +36,7 @@ pipeline {
                 
             }
         }
-        stage('Testing') {
+        stage('Upload to Testing server') {
                     steps {
                         sh 'kubectl config use-context rancher-desktop'
                         sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
@@ -43,7 +44,24 @@ pipeline {
                         sh 'kubectl rollout restart deployments'
                     }
                 }
-        stage('Deploying') {
+        stage('Testing') {
+            withCredentials([sshUserPrivateKey(credentialsId: 'Win10', keyFileVariable: 'KEY_FILE')]) {
+                sshagent(['Win10']) {
+                    steps {
+                        sh '''
+                            ssh -i -o StrictHostKeyChecking=no $KEY_FILE tom@$WIN10 '
+                            curl "http://172.20.192.1:5000"
+
+
+                    '
+
+
+                        '''
+                    }
+                }
+        }
+    }
+        stage('Deploy') {
                     steps {
                         sh '''
                             gcloud config set project macro-aurora-393206
