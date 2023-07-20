@@ -38,8 +38,9 @@ pipeline {
         stage('Testing') {
                     steps {
                         sh 'kubectl config use-context rancher-desktop'
-                        sh 'python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
-                        sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
+                        sh 'cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/'
+                        sh 'python3 highestnum.py'
+                        sh 'kubectl apply -f kubemyflask.yaml'
                         sh 'kubectl rollout restart deployments'
                     }
                 }
@@ -47,8 +48,9 @@ pipeline {
                     steps {
                         sh '''
                             gcloud config set project macro-aurora-393206
-                            python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
-                            kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                            cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/
+                            python3 highestnum.py
+                            kubectl apply -f kubemyflask.yaml
                             kubectl rollout restart deployments
                         '''
     }
