@@ -10,7 +10,6 @@ pipeline {
                     env.ANSIBLE_IP = "192.168.56.101"
                 }
                 sh 'echo "Performing cleanup..."'
-                sh 'pwd'
                 sh 'sudo rm -rf *'
             }
         }
@@ -24,12 +23,11 @@ pipeline {
 
         stage('Upload to Docker Hub') {
             steps {
-                        sh '''
+                        sh ''' 
+                                   sudo systemctl restart docker.service docker.socket
                                    python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
-                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application
-                                   python3 findlastversion.py
-                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db
-                                   python3 findlastversionSQl.py
+                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application/findlastversion.py
+                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db/findlastversionSQl.py
                         '''
                     
                 
