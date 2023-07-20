@@ -37,7 +37,6 @@ def update_image_tags(yaml_data, high_flask, high_sql):
             image_tag = item["spec"]["template"]["spec"]["containers"][0]["image"]
             repository, _, tag = image_tag.rpartition(":")  # Use rpartition to handle tags with colons
 
-            # Use the high_flask and high_sql variables directly instead of calling get_highest_version
             if repository == "tomerkul/myflask" and high_flask:
                 item["spec"]["template"]["spec"]["containers"][0]["image"] = f"{repository}:{high_flask}"
             elif repository == "tomerkul/mysql" and high_sql:
