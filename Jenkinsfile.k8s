@@ -26,8 +26,10 @@ pipeline {
                         sh ''' 
                                    sudo systemctl restart docker.service docker.socket
                                    python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/del_old_ver.py
-                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application/findlastversion.py
-                                   python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db/findlastversionSQl.py
+                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/application/
+                                   python3 findlastversion.py
+                                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask/db/
+                                   python3 findlastversionSQl.py
                         '''
                     
                 
