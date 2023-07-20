@@ -46,7 +46,10 @@ def update_image_tags(yaml_data, high_flask, high_sql):
 
 
 def main():
-    with open("kubemyflask.yaml", "r") as file:
+    
+    file_path = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml"
+
+    with open(file_path, "r") as file:
         yaml_data = list(yaml.safe_load_all(file))
     high_flask = get_highest_version("myflask")
     high_sql = get_highest_version("mysql")
@@ -55,7 +58,7 @@ def main():
 
     updated_yaml_data = update_image_tags(yaml_data, high_flask, high_sql)
 
-    with open("kubemyflask.yaml", "w") as file:
+    with open(file_path, "w") as file:
         yaml.safe_dump_all(updated_yaml_data, file)
 
 if __name__ == "__main__":
