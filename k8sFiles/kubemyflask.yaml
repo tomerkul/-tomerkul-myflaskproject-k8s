@@ -1,42 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: db
-  template:
-    metadata:
-      labels:
-        app: db
-    spec:
-      restartPolicy: Always
-      containers:
-        - name: app-container
-          image: tomerkul/myflask:latest
-          imagePullPolicy: Always  # Added image pull policy
-          ports:
-            - containerPort: 5000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-flask-app-service-with-db
-spec:
-  selector:
-    app: db
-  ports:
-    - protocol: TCP
-      port: 5000
-      targetPort: 5000
-  type: LoadBalancer
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: db-deployment
+  name: app-with-db-deployment
 spec:
   replicas: 1
   selector:
@@ -48,21 +13,25 @@ spec:
         app: db
     spec:
       containers:
-        - name: db-container
-          image: tomerkul/mysql:latest
-          imagePullPolicy: Always  # Added image pull policy
-          ports:
-            - containerPort: 3306
-          env:
-            - name: MYSQL_DATABASE
-              value: "develop"
-            - name: MYSQL_USER
-              value: "tomer"
-            - name: MYSQL_PASSWORD
-              value: "1234"
-            - name: MYSQL_ROOT_PASSWORD
-              value: "1234"
-
+      - name: app-container
+        image: tomerkul/myflask:2.8
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+      - name: db-container
+        image: tomerkul/mysql:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_DATABASE
+            value: "develop"
+          - name: MYSQL_USER
+            value: "tomer"
+          - name: MYSQL_PASSWORD
+            value: "1234"
+          - name: MYSQL_ROOT_PASSWORD
+            value: "1234"
 ---
 apiVersion: v1
 kind: Service
@@ -76,3 +45,18 @@ spec:
       port: 3306
       targetPort: 3306
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-flask-app-service-with-db
+spec:
+  selector:
+    app: db
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
+
+
