@@ -33,33 +33,37 @@ def get_highest_version(repository):
 
 def update_image_tags(yaml_data, high_flask, high_sql):
     for item in yaml_data:
-        if "image" in item.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [{}])[0]:
-            image_tag = item["spec"]["template"]["spec"]["containers"][0]["image"]
-            repository, _, tag = image_tag.rpartition(":")  # Use rpartition to handle tags with colons
+        if "containers" in item.get("spec", {}).get("template", {}).get("spec", {}):
+            containers = item["spec"]["template"]["spec"]["containers"]
+            for container in containers:
+                if "image" in container:
+                    image_tag = container["image"]
+                    repository, _, tag = image_tag.rpartition(":")  
 
-            if repository == "tomerkul/myflask" and high_flask:
-                item["spec"]["template"]["spec"]["containers"][0]["image"] = f"{repository}:{high_flask}"
-            elif repository == "tomerkul/mysql" and high_sql:
-                item["spec"]["template"]["spec"]["containers"][0]["image"] = f"{repository}:{high_sql}"
+                    if repository == "tomerkul/myflask" and high_flask is not None:
+                        container["image"] = f"{repository}:{high_flask}"  
+
+                    if repository == "tomerkul/mysql" and high_sql is not None:
+                        container["image"] = f"{repository}:{high_sql}"
 
     return yaml_data
 
-
 def main():
-    
     file_path = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml"
-
+    
     with open(file_path, "r") as file:
         yaml_data = list(yaml.safe_load_all(file))
+    
     high_flask = get_highest_version("myflask")
     high_sql = get_highest_version("mysql")
+    
     print("Highest Flask version:", high_flask)
     print("Highest MySQL version:", high_sql)
 
     updated_yaml_data = update_image_tags(yaml_data, high_flask, high_sql)
 
     with open(file_path, "w") as file:
-        yaml.safe_dump_all(updated_yaml_data, file)
+        yaml.dump(updated_yaml_data[0], file)
 
 if __name__ == "__main__":
     main()
