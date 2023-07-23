@@ -1,3 +1,4 @@
+
 import docker
 
 client = docker.from_env()
@@ -15,15 +16,12 @@ if existing_versions:
 else:
     next_version = 1.0
 
-# Format the version number to one decimal place
-next_version = f"{next_version:.1f}"
-
 image_name = f"tomerkul/mysql:{next_version}"
 client.images.build(path=".", tag=image_name, rm=True, pull=True)
 print(f"Successfully built image: {image_name}")
 
 # Push the image with the specified tag
-client.images.push(repository="tomerkul/mysql", tag=next_version)
+client.images.push(repository="tomerkul/mysql", tag=str(next_version))
 print(f"Successfully pushed image: {image_name}")
 
 # Push the image with the 'latest' tag
@@ -33,3 +31,4 @@ image_to_tag = client.images.get(image_name)
 image_to_tag.tag(repository="tomerkul/mysql", tag=latest_tag)
 client.images.push(repository="tomerkul/mysql", tag=latest_tag)
 print(f"Successfully pushed image: {latest_image_name}")
+
