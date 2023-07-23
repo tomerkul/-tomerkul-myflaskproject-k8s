@@ -48,10 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    echo $PATH
-                    which gcloud
-                    gcloud version
-                    gcloud config set project macro-aurora-393206
+                    gcloud components install gke-gcloud-auth-plugin
                     kubectl config use-context gke_macro-aurora-393206_us-east1_deploy-cluster-1
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
                     kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
