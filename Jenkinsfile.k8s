@@ -55,7 +55,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials deploy-cluster-1	 --region=us-east1
+                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud  container clusters get-credentials deploy-cluster-1	 --region=us-east1
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
                     kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
                     kubectl rollout restart deployments
