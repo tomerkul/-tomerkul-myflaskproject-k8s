@@ -40,7 +40,7 @@ pipeline {
                 sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
                 sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
                 sh 'kubectl rollout restart deployments'
-                sh 'sleep 30'
+                sh 'sleep 60'
                 sh 'curl http://172.30.123.114:5000/'
             }
         }
@@ -48,7 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    gcloud container clusters get-credentials deploy-cluster-1	 --region=us-east1
+                    /snap/bin/gcloud container clusters get-credentials deploy-cluster-1	 --region=us-east1
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
                     kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
                     kubectl rollout restart deployments
