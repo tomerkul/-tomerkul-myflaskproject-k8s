@@ -40,6 +40,8 @@ pipeline {
                 sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
                 sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml'
                 sh 'kubectl rollout restart deployments'
+                sh 'sleep 30'
+                sh 'curl http://172.30.123.114:5000/'
             }
         }
 
