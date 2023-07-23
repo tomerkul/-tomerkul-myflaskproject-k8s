@@ -11,7 +11,7 @@ for image in images:
 
 if existing_versions:
     latest_version = max(existing_versions)
-    next_version = latest_version + 0.1
+    next_version = latest_version + 0.01
 else:
     next_version = 1.0
 
