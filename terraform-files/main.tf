@@ -15,7 +15,7 @@ resource "aws_instance" "example" {
 
   connection {
       type        = "ssh"
-      user        = "ec2-user"  # The SSH user for the AMI you are using (Amazon Linux uses "ec2-user")
+      user        = "ec2-user" 
       private_key = file("~/.ssh/tst.pem")
       host        = self.public_ip  # The public IP of the EC2 instance
     }
@@ -50,7 +50,7 @@ resource "aws_security_group" "instance" {
   egress {
     from_port       = 0
     to_port         = 0
-    protocol        = "-1"  # All protocols
-    cidr_blocks     = ["10.0.0.0/16"]  # Replace with your desired destination IP range
+    protocol        = "-1"  
+    cidr_blocks     = ["10.0.0.0/16"]  
   }
 }
