@@ -54,10 +54,11 @@ pipeline {
             steps {
                     withCredentials([file(credentialsId: 'My First Project', variable: 'GC_KEY')]) {
                             sh '''
-                            gcloud auth activate-service-account --key-file=${GC_KEY}
-                            
-                            
-                            
+                            /var/lib/jenkins/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}
+                            cd var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/terraform_files
+                            terraform init
+                            terraform refresh
+                            terraform apply -auto-approve
                             '''
                           }
             }
