@@ -9,6 +9,8 @@ pipeline {
                 script {
                     env.ANSIBLE_IP = "192.168.56.101"
                     env.WIN10 = "172.20.192.1"
+                    env.Project = "macro-aurora-393206"
+                    env.WIN10 = "172.20.192.1"
                 }
                 sh 'echo "Performing cleanup..."'
                 sh 'sudo rm -rf *'
@@ -46,6 +48,18 @@ pipeline {
             }
         }
 
+         stage('Preparing Cluster') {
+            steps {
+                    withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+                            sh '''
+                            gcloud auth activate-service-account --key-file=${GC_KEY}
+                            
+                            
+                            
+                            '''
+                          }
+            }
+        }
          stage('Confirmation') {
             steps {
                 input(message: 'Confirm the deployment?', ok: 'Deploy', submitter: 'tomer_kuilsh')
@@ -53,12 +67,15 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh '''
-                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud  container clusters get-credentials deploy-cluster-1	 --region=us-east1
+                withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+                    sh '''
+                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}
+                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials prod --zone us-east1-b --project $Project
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
                     kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
                     kubectl rollout restart deployments
                 '''
+                }
             }
         }
     }
