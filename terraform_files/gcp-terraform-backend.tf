@@ -2,7 +2,7 @@ terraform {
   backend "gcs" {
     bucket      = "tomerkul-gke-terraform"
     prefix      = "terraform/state"
-    credentials = "./macro-aurora-393206-e1e6e639aabe.json"
+    credentials = "/var/lib/jenkins/terra/macro-aurora-393206-e1e6e639aabe.json"
   }
 }
 
