@@ -1,4 +1,4 @@
-credentials        = "./macro-aurora-393206-e1e6e639aabe.json" 
+credentials        = "/var/lib/jenkins/terra/macro-aurora-393206-e1e6e639aabe.json" 
 project_id         = "macro-aurora-393206"               
 region             = "us-east1"                     
 zones              = ["us-east1-b"]
