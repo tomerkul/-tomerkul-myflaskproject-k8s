@@ -52,7 +52,7 @@ pipeline {
 
          stage('Preparing Cluster') {
             steps {
-                    withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+                    withCredentials([file(credentialsId: 'My First Project', variable: 'GC_KEY')]) {
                             sh '''
                             gcloud auth activate-service-account --key-file=${GC_KEY}
                             
@@ -69,7 +69,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                withCredentials([file(credentialsId: 'key-sa', variable: 'GC_KEY')]) {
+                withCredentials([file(credentialsId: 'My First Project', variable: 'GC_KEY')]) {
                     sh '''
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials prod --zone us-east1-b --project $Project
