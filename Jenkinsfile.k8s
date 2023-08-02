@@ -7,9 +7,11 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
+                    withCredentials([string(credentialsId: 'Project_ID', variable: 'Project_id')]) {
+                    env.Project = "${Project_id}"
+}
                     env.ANSIBLE_IP = "192.168.56.101"
                     env.WIN10 = "172.20.192.1"
-                    env.Project = "macro-aurora-393206"
                     env.WIN10 = "172.20.192.1"
                 }
                 sh 'echo "Performing cleanup..."'
