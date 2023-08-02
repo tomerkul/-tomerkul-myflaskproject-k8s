@@ -24,16 +24,16 @@ module "gke" {
   node_pools = [
     {
       name             = "basic-node-pool"
-      machine_type     = "n1-standard-1"  # Replace with desired machine type
-      disk_size_gb     = 50             # Replace with desired disk size
-      disk_type        = "pd-standard"   # Replace with desired disk type ("pd-standard" or "pd-ssd")
-      image_type       = "COS_CONTAINERD"  # Specify the image type ("COS" or "COS_CONTAINERD")
-      min_count        = 1               # Replace with minimum number of nodes
-      max_count        = 1              # Replace with maximum number of nodes
-      auto_repair      = true            # Enable auto repair
-      auto_upgrade     = true            # Enable auto upgrade
-      preemptible      = false           # Set to "true" if you want to use preemptible VMs
-      initial_node_count = 1             # Replace with initial number of nodes
+      machine_type     = "n1-standard-1"  
+      disk_size_gb     = 50            
+      disk_type        = "pd-standard"  
+      image_type       = "COS_CONTAINERD"  
+      min_count        = 1               
+      max_count        = 1            
+      auto_repair      = true           
+      auto_upgrade     = true          
+      preemptible      = false         
+      initial_node_count = 1    
     }
   ]
 }
