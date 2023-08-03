@@ -55,7 +55,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'My First Project', variable: 'GC_KEY')]) {
                             sh '''
                             /var/lib/jenkins/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}
-                            cd var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/terraform_files
+                            cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/terraform_files
                             terraform init
                             terraform refresh
                             terraform apply -auto-approve
@@ -73,7 +73,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'My First Project', variable: 'GC_KEY')]) {
                     sh '''
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}
-                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials prod --zone us-east1-b --project $Project
+                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
                     kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
                     kubectl rollout restart deployments
