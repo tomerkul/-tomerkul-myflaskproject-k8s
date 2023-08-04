@@ -16,7 +16,6 @@ spec:
       containers:
         - name: app-container
           image: tomerkul/myflask:latest
-          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
