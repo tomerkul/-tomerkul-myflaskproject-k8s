@@ -31,39 +31,48 @@ def get_highest_version(repository):
         print(f"Error: Unable to fetch data for {repository}. Response status code: {response.status_code}")
         return None
 
-def update_image_tags(yaml_data, high_flask, high_sql):
+def update_image_tags(yaml_data, repository, version):
     for item in yaml_data:
         if "containers" in item.get("spec", {}).get("template", {}).get("spec", {}):
             containers = item["spec"]["template"]["spec"]["containers"]
             for container in containers:
                 if "image" in container:
                     image_tag = container["image"]
-                    repository, _, tag = image_tag.rpartition(":")  
+                    repo, _, tag = image_tag.rpartition(":")  
 
-                    if repository == "tomerkul/myflask" and high_flask is not None:
-                        container["image"] = f"{repository}:{high_flask}"  
-
-                    if repository == "tomerkul/mysql" and high_sql is not None:
-                        container["image"] = f"{repository}:{high_sql}"
+                    if repo == repository and version is not None:
+                        container["image"] = f"{repo}:{version}"  
 
     return yaml_data
 
 def main():
-    file_path = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml"
+    file_path_flask = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml"
+    file_path_sql = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml"
     
-    with open(file_path, "r") as file:
-        yaml_data = list(yaml.safe_load_all(file))
-    
-    high_flask = get_highest_version("myflask")
-    high_sql = get_highest_version("mysql")
-    
-    print("Highest Flask version:", high_flask)
-    print("Highest MySQL version:", high_sql)
+    # For Flask update
+with open(file_path_flask, "r") as file:
+    yaml_data = list(yaml.safe_load_all(file))
 
-    updated_yaml_data = update_image_tags(yaml_data, high_flask, high_sql)
+high_flask = get_highest_version("myflask") 
+print("Highest Flask version:", high_flask)
 
-    with open(file_path, "w") as file:
-        yaml.dump(updated_yaml_data[0], file)
+updated_yaml_data = update_image_tags(yaml_data, "tomerkul/myflask", high_flask)
+
+with open(file_path_flask, "w") as file:
+    yaml.dump(updated_yaml_data[0], file)
+
+# For MySQL update
+with open(file_path_sql, "r") as file:
+    yaml_data = list(yaml.safe_load_all(file))
+
+high_sql = get_highest_version("mysql")
+print("Highest MySQL version:", high_sql)
+
+updated_yaml_data = update_image_tags(yaml_data, "tomerkul/mysql", high_sql)
+
+with open(file_path_sql, "w") as file:
+    yaml.dump(updated_yaml_data[0], file)
+
 
 if __name__ == "__main__":
     main()
