@@ -6,15 +6,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: app
   template:
     metadata:
       labels:
-        app: db
+        app: app
     spec:
       restartPolicy: Always
       containers:
         - name: app-container
+          imagePullPolicy: Always
           image: tomerkul/myflask:latest
           ports:
             - containerPort: 5000
@@ -37,7 +38,7 @@ metadata:
   name: my-flask-app-service-with-db
 spec:
   selector:
-    app: db
+    app: app
   ports:
     - protocol: TCP
       port: 5000
