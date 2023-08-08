@@ -75,7 +75,9 @@ pipeline {
                     sh '''
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
                     sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
-                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kubemyflask.yaml
+                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml
+                    sleep 60
+                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml
                     kubectl rollout restart deployments
                 '''
             }
