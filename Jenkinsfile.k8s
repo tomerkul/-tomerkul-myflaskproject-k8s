@@ -46,7 +46,7 @@ pipeline {
                 sh 'sleep 60'
                 sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml'
                 sh 'sleep 10'
-                sh 'curl http://172.23.148.176:5000'
+                sh 'curl http://172.23.149.204:5000'
                 sh 'kubectl delete -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml' 
                 sh 'kubectl delete -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml'
                 
