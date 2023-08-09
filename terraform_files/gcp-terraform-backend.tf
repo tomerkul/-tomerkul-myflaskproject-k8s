@@ -6,6 +6,37 @@ terraform {
   }
 }
 
+resource "google_compute_firewall" "allow_inbound" {
+  name    = "allow-inbound"
+  network = "default"
+
+  allow {
+    protocol = "TCP"
+    ports    = ["22", "5000", "80", "443","3000"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
+resource "google_compute_firewall" "allow_outbound" {
+  name    = "allow-outbound"
+  network = "default"
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "TCP"
+  }
+
+  allow {
+    protocol = "udp"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.project_id
