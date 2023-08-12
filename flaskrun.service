@@ -1,9 +1,0 @@
-[Unit]
-Description=Flask Run Service
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/bash /usr/local/bin/flaskrun.sh
-
-[Install]
-WantedBy=default.target
