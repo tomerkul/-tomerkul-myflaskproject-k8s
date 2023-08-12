@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 set -ex
-EXTERNAL_IP=$(kubectl get service flask-service -o-jsonpath='{.status.loadBalancer.ingress[0].ip}')
+EXTERNAL_IP=$(kubectl get service my-flask-app-service-with-db -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 http_response=$(curl -s -o /dev/null -w "%{http_code}" ${EXTERNAL_IP}:5000)
 if [[ $http_response == 200 ]]; then
     echo "Flask app returned a 200 status code. Test passed!"
