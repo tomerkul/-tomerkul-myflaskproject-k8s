@@ -1,5 +1,6 @@
 import sys
 import requests
+import yaml
 from packaging.version import Version
 
 def compare_versions(v1, v2):
@@ -25,14 +26,29 @@ def get_highest_version(repository):
 
         return max_version
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python get_highest_version.py <repository_name>")
-        sys.exit(1)
-    
-    repository_name = sys.argv[1]
-    highest_version = get_highest_version(repository_name)
-    if highest_version:
-        print(f"The highest version for {repository_name} is: {highest_version}")
+
+def update_values_yaml(repository, new_version):
+    with open("values.yaml", "r") as file:
+        yaml_data = yaml.safe_load(file)
+
+    if repository == "mysql":
+        yaml_data["dbImage"] = f"tomerkul/mysql:{new_version}"
+    elif repository == "myflask":
+        yaml_data["appImage"] = f"tomerkul/{repository}:{new_version}"
     else:
-        print(f"No versions found for {repository_name}")
+        print(f"Error: Unsupported repository '{repository}'")
+        return
+
+    with open("values.yaml", "w") as file:
+        yaml.dump(yaml_data, file)
+
+if __name__ == "__main__":
+    repository_names = ["mysql", "myflask"]
+    for repo in repository_names:
+        highest_version = get_highest_version(repo)
+        if highest_version:
+            print(f"The highest version for {repo} is: {highest_version}")
+            update_values_yaml(repo, highest_version)
+            print("values.yaml updated successfully.")
+        else:
+            print(f"No versions found for {repo}")
