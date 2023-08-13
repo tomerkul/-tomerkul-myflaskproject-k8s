@@ -40,16 +40,13 @@ pipeline {
         }
         stage('Upload to Testing server') {
             steps {
-                sh 'kubectl config use-context rancher-desktop'
-                sh 'sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py'
-                sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml'
-                sh 'sleep 60'
-                sh 'kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml'
-                sh 'sleep 100'
-                sh 'bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/tests/test.sh'
-                sh 'kubectl delete -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml' 
-                sh 'kubectl delete -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml'
-                
+                sh '''
+                  kubectl config use-context rancher-desktop
+                  python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/get_highest_version.py
+                  sudo bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/install.sh
+                  sleep 120
+                  bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/tests/test.sh
+                '''
             }
         }
 
@@ -74,11 +71,8 @@ pipeline {
             steps {
                     sh '''
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
-                    sudo python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/highestnum.py
-                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_sql.yaml
-                    sleep 60
-                    kubectl apply -f /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/k8sFiles/kube_flask.yaml
-                    kubectl rollout restart deployments
+                    python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/get_highest_version.py
+                    sudo bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/install.sh
                 '''
             }
         }
