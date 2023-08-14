@@ -46,7 +46,7 @@ pipeline {
                   python3 get_highest_version.py
                   bash install.sh
                   sleep 120
-                  bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/tests/test.sh
+                  bash /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/tests/tests.sh
                 '''
             }
         }
