@@ -60,11 +60,11 @@ module "gke" {
       disk_type        = "pd-standard"  
       image_type       = "COS_CONTAINERD"  
       min_count        = 1               
-      max_count        = 1            
+      max_count        = 2            
       auto_repair      = true           
       auto_upgrade     = true          
       preemptible      = false         
-      initial_node_count = 1    
+      initial_node_count = 2    
     }
   ]
 }
