@@ -41,8 +41,10 @@ pipeline {
                   kubectl config use-context rancher-desktop
                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/
                   python3 get_highest_version.py
+                  sudo rm -rf charts/*
                   sudo helm package . --destination charts/
                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/charts
+                  sudo helm repo index . --url gs://helm_server
                   gsutil cp *  gs://helm_server
                   cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/
                   bash install.sh
