@@ -76,7 +76,6 @@ pipeline {
                     sh '''
                     /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
                     cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/
-                    python3 get_highest_version.py
                     bash install.sh
                 '''
             }
