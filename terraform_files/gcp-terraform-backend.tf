@@ -51,6 +51,8 @@ module "gke" {
   network_policy             = true
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
+  logging_service            = "none"
+  monitoring_service         = "none"
 
   node_pools = [
     {
