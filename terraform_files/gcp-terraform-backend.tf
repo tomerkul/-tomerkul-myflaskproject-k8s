@@ -12,7 +12,7 @@ resource "google_compute_firewall" "allow_inbound" {
 
   allow {
     protocol = "TCP"
-    ports    = ["22", "5000", "80", "443","3000"]
+    ports    = ["22", "5000", "80", "443","3000","32676"]
   }
 
   source_ranges = ["0.0.0.0/0"]
