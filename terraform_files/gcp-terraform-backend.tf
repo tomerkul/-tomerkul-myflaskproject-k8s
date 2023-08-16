@@ -22,6 +22,8 @@ resource "google_compute_firewall" "allow_outbound" {
   name    = "allow-outbound"
   network = "default"
 
+  direction = "EGRESS"
+
   allow {
     protocol = "icmp"
   }
