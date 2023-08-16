@@ -6,33 +6,21 @@ terraform {
   }
 }
 
-data "google_compute_firewall" "existing_allow_inbound" {
-  name = "allow-inbound"
-  project = var.project_id
-}
-
-data "google_compute_firewall" "existing_allow_outbound" {
-  name = "allow-outbound"
-  project = var.project_id
-}
-
 resource "google_compute_firewall" "allow_inbound" {
-  count    = data.google_compute_firewall.existing_allow_inbound.exists ? 0 : 1
-  name     = "allow-inbound"
-  network  = "default"
+  name    = "allow-inbound"
+  network = "default"
 
   allow {
     protocol = "TCP"
-    ports    = ["22", "5000", "80", "443", "3000"]
+    ports    = ["22", "5000", "80", "443","3000"]
   }
 
   source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_firewall" "allow_outbound" {
-  count    = data.google_compute_firewall.existing_allow_outbound.exists ? 0 : 1
-  name     = "allow-outbound"
-  network  = "default"
+  name    = "allow-outbound"
+  network = "default"
 
   allow {
     protocol = "icmp"
@@ -48,6 +36,7 @@ resource "google_compute_firewall" "allow_outbound" {
 
   source_ranges = ["0.0.0.0/0"]
 }
+
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = var.project_id
@@ -62,22 +51,20 @@ module "gke" {
   network_policy             = true
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
-  logging_service            = "none"
-  monitoring_service         = "none"
 
   node_pools = [
     {
       name             = "basic-node-pool"
-      machine_type     = "n1-standard-1"  
-      disk_size_gb     = 50            
-      disk_type        = "pd-standard"  
-      image_type       = "COS_CONTAINERD"  
-      min_count        = 1               
-      max_count        = 2            
-      auto_repair      = true           
-      auto_upgrade     = true          
-      preemptible      = false         
-      initial_node_count = 2    
+      machine_type     = "n1-standard-1"
+      disk_size_gb     = 50
+      disk_type        = "pd-standard"
+      image_type       = "COS_CONTAINERD"
+      min_count        = 1
+      max_count        = 2
+      auto_repair      = true
+      auto_upgrade     = true
+      preemptible      = false
+      initial_node_count = 2
     }
   ]
 }
