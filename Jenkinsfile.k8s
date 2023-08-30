@@ -3,6 +3,9 @@ pipeline {
     triggers {
         pollSCM('*/5 * * * *')
     }
+    environment {
+        GITHUB_TOKEN = credentials('YourGitHubTokenID')
+    }
     stages {
         stage('Cleanup') {
             steps {
@@ -72,13 +75,37 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                    sh '''
-                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
-                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/
-                    bash install.sh
-                '''
+
+             script {
+                    def githubUrl = "https://api.github.com/tomerkul/deployment/blob/main/helm/values.yaml"
+                    def githubToken = credentials('GITHUB_TOKEN')
+                    
+                    def response = sh(script: """
+                        curl -X GET -u \$githubToken:x-oauth-basic \$githubUrl
+                    """, returnStatus: true)
+
+                    if (response == 200) {
+                        def base64Content = sh(script: """
+                            python3 /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/get_highest_version.py < values.yaml | base64
+                        """, returnStdout: true).trim()
+
+                        def payload = """
+                        {
+                            "message": "Update values.yaml",
+                            "content": "${base64Content}",
+                            "branch": "main"
+                        }
+                        """
+
+                        sh(script: """
+                            curl -X PUT -u \$githubToken:x-oauth-basic -d '${payload}' \$githubUrl
+                        """)
+                        echo "values.yaml updated successfully."
+                    } else {
+                        echo "Error: Failed to fetch the existing file."
+                    }
+                }
             }
-        }
     }
 }
+
