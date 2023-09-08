@@ -1,6 +1,7 @@
 # My CI/CD project
 
-![image](https://github.com/tomerkul/tomerkul-myflaskproject-k8s/assets/91198141/c8dafcc6-cb4c-4807-b012-b554475b0b7f)
+![image](https://github.com/tomerkul/tomerkul-myflaskproject-k8s/assets/91198141/4f79f4bb-b9d9-4901-9e54-b50146d997bc)
+
 
 Within this pipeline, I skillfully utilized a spectrum of tools that formed the backbone of the project's success. Git emerged as the collaborative coding hub, fostering teamwork and version control. Docker seamlessly packaged the app, ensuring consistency across diverse environments. Kubernetes, the orchestrator of app clusters, adeptly managed the application's life cycle.
 
