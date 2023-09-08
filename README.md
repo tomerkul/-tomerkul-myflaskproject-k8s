@@ -1,18 +1,26 @@
 # My CI/CD project
 
-![image](https://github.com/tomerkul/tomerkul-myflaskproject-k8s/assets/91198141/4f79f4bb-b9d9-4901-9e54-b50146d997bc)
+![image](https://github.com/tomerkul/tomerkul-myflaskproject-k8s/assets/91198141/c5920bdc-bb40-4022-8186-c87ed74ae75d)
 
 
-Within this pipeline, I skillfully utilized a spectrum of tools that formed the backbone of the project's success. Git emerged as the collaborative coding hub, fostering teamwork and version control. Docker seamlessly packaged the app, ensuring consistency across diverse environments. Kubernetes, the orchestrator of app clusters, adeptly managed the application's life cycle.
 
-The crown jewel, Helm, simplified deployment complexities, encapsulating the process in a neat package. Python and Bash scripts stepped in, automating tasks with precision and efficiency, minimizing manual intervention.
+This Jenkins pipeline automates the deployment process for a Flask application and related infrastructure. Here's a description of each stage:
 
-To reinforce the structural integrity of the app's foundation, I introduced Terraform into the mix. With Terraform's infrastructure-as-code prowess, I crafted a scalable and reliable cluster structure for Kubernetes. This strategic approach enabled consistent and repeatable provisioning of resources, ensuring that the app's environment could effortlessly accommodate changes.
+1) Cleanup: This stage performs cleanup by deleting all files in the current workspace directory. It's a preparation step to ensure a clean environment for the subsequent tasks.
 
-This orchestrated symphony of tools, now including Terraform, harmonized seamlessly. As the pipeline advanced, code changes underwent continuous integration and rigorous testing on a dedicated server. Issues were identified and rectified early in the process. Once the code's stability was confirmed, Helm orchestrated the graceful deployment of the latest version to the main server, delivering an impeccable experience to the users.
+2) Clone: In this stage, the pipeline clones a Git repository from https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git. It's a common practice to retrieve the source code or application files for further processing.
 
-This intricate choreography, now fortified by Terraform's structural prowess, demonstrated a meticulous fusion of technology and strategy. The end result was a project that celebrated the art of development and deployment, satisfying developers and users alike.
+3) Upload to Docker Hub: This stage restarts the Docker service and runs Python scripts to manage Docker images. It cleans up old versions, determines the latest version, and presumably builds and uploads Docker images to Docker Hub.
 
+4) Upload to Testing Server: This stage involves Kubernetes and Helm operations. It configures the Kubernetes context to 'rancher-desktop' and packages Helm charts. The Helm repository index is updated, and the charts are copied to a Google Cloud Storage bucket. The pipeline then deploys the application and performs tests on it.
+
+5) Preparing Cluster: This stage uses Terraform to initialize, refresh, and apply infrastructure changes. It prepares the target cluster for deployment.
+
+6) Confirmation: This is an interactive stage where a manual confirmation is required to proceed with the deployment. It prompts the user for confirmation.
+
+7) Deploy: In this final stage, the pipeline orchestrates the deployment of the Flask application to a Kubernetes cluster. It also manages updates to a Git repository containing the Helm chart. This stage is crucial for continuous delivery as it triggers ArgoCD, which monitors changes in the Git repository. When changes are detected, ArgoCD automatically synchronizes with the updated repository, ensuring that the latest version of the application is deployed to the Google Cloud cluster. This process streamlines continuous integration and delivery, ensuring that the production environment is always up to date with the latest application version.
+
+This pipeline automates the deployment of a Flask application, manages Docker images, and orchestrates infrastructure changes using Kubernetes and Terraform. It includes safety measures like manual confirmation and checks for changes before deployment.
 
 
 
