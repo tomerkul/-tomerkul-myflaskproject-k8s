@@ -90,8 +90,6 @@ pipeline {
                         // Change to the repository directory
                         dir('deployment/helm') {
                             try {
-                                sh "git config --global user.email 'you@example.com'"
-                                sh "git config --global user.name 'Your Name'"
                                 sh "git push origin $sourceBranch --force"
                                 echo "Deployment successful."
                             } catch (Exception e) {
