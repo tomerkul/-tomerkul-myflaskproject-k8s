@@ -71,11 +71,36 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh '''
-                    /var/lib/jenkins/google-cloud-sdk/bin/gcloud container clusters get-credentials terraform-gke --region us-east1 --project $Project
-                    cd /var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/helm/
-                    bash install.sh
-                '''
+                withCredentials([string(credentialsId: 'git_hub_token', variable: 'token')]) {
+                    script {
+                        def username = "tomerkul"
+                        def repo = "deployment"
+                        def sourceBranch = "main"
+
+                        def repoUrlWithAuth = "https://${username}:${token}@github.com/${username}/${repo}.git"
+
+                        sh """
+                            git clone ${repoUrlWithAuth} deployment
+                            cd deployment/helm
+                            python3 get_highest_version.py
+                            git add .
+                            git commit -m 'values.yaml update' --allow-empty
+                        """
+                        
+                        // Change to the repository directory
+                        dir('deployment/helm') {
+                            try {
+                                sh "git config --global user.email 'you@example.com'"
+                                sh "git config --global user.name 'Your Name'"
+                                sh "git push origin $sourceBranch --force"
+                                echo "Deployment successful."
+                            } catch (Exception e) {
+                                echo "Nothing new to commit. Deployment is up to date."
+                                currentBuild.result = 'SUCCESS' // Mark the build as successful
+                            }
+                        }
+                    }
+                }
             }
         }
     }
