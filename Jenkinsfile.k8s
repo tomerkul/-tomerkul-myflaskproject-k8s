@@ -9,7 +9,7 @@ pipeline {
     steps {
         script {
             def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
-            
+
             // Enter the sample-flask directory
             dir(sampleFlaskDir) {
                 // Fetch the latest commits from the remote repository
@@ -18,23 +18,25 @@ pipeline {
                 // Get the latest commit hash of the current branch
                 def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 
-                // Get the latest commit hash from the remote branch
+                // Get the latest commit hash from the remote branch (origin/main)
                 def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
 
-                // Use 'git diff' to check for changes within the directory
-                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit} -- ${sampleFlaskDir}")
+                // Use 'git diff' to check for changes between main and origin/main
+                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit} ${currentCommit}:${sampleFlaskDir} ${latestRemoteCommit}:${sampleFlaskDir}")
 
-                if (diff == 0) {
-                    // No changes detected
-                    error "No new commits detected in the ${sampleFlaskDir} directory."
-                } else {
+                if (diff != 0) {
                     // Changes detected
-                    echo "New commits detected in the ${sampleFlaskDir} directory. Continuing to the next stage."
+                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
+                } else {
+                    // No changes detected
+                    echo "No new commits detected in the sample-flask directory."
+                    error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
                 }
             }
         }
     }
 }
+
 
 
 
