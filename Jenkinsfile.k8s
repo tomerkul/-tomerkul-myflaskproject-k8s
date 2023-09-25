@@ -25,14 +25,17 @@ pipeline {
                 def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit}")
 
                 if (diff == 0) {
+                    // No changes detected
                     echo "No new commits detected in the sample-flask directory."
                 } else {
+                    // Changes detected
                     echo "New commits detected in the sample-flask directory. Continuing to the next stage."
                 }
             }
         }
     }
 }
+
 
 
         stage('Cleanup') {
