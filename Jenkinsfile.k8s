@@ -41,14 +41,14 @@ pipeline {
                 if (currentCommit == latestRemoteCommit) {
                     echo "No new commits detected in the sample-flask directory."
                     currentBuild.result = 'SUCCESS' // Set build result to 'SUCCESS'
-                    return
                 } else {
-                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
+                    error "New commits detected in the sample-flask directory. Aborting the pipeline."
                 }
             }
         }
     }
 }
+
         stage('Upload to Docker Hub') {
             steps {
                 sh ''' 
