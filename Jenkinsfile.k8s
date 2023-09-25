@@ -26,7 +26,7 @@ pipeline {
 
                 if (diff == 0) {
                     // No changes detected
-                    echo "No new commits detected in the ${sampleFlaskDir} directory."
+                    error "No new commits detected in the ${sampleFlaskDir} directory."
                 } else {
                     // Changes detected
                     echo "New commits detected in the ${sampleFlaskDir} directory. Continuing to the next stage."
