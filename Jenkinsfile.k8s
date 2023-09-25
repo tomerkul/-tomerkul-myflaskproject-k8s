@@ -4,6 +4,7 @@ pipeline {
         pollSCM('*/5 * * * *')
     }
     stages {
+
         stage('Check for New Commits') {
     steps {
         script {
@@ -25,7 +26,6 @@ pipeline {
 
                 if (diff == 0) {
                     echo "No new commits detected in the sample-flask directory."
-                    error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
                 } else {
                     echo "New commits detected in the sample-flask directory. Continuing to the next stage."
                 }
@@ -33,6 +33,7 @@ pipeline {
         }
     }
 }
+
 
         stage('Cleanup') {
             steps {
