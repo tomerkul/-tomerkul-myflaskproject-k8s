@@ -21,20 +21,21 @@ pipeline {
                 // Get the latest commit hash from the remote branch
                 def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
 
-                // Use 'git diff' to check for changes
-                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit}")
+                // Use 'git diff' to check for changes within the directory
+                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit} -- ${sampleFlaskDir}")
 
                 if (diff == 0) {
                     // No changes detected
-                    echo "No new commits detected in the sample-flask directory."
+                    echo "No new commits detected in the ${sampleFlaskDir} directory."
                 } else {
                     // Changes detected
-                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
+                    echo "New commits detected in the ${sampleFlaskDir} directory. Continuing to the next stage."
                 }
             }
         }
     }
 }
+
 
 
 
