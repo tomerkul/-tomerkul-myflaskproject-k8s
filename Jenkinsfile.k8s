@@ -39,15 +39,16 @@ pipeline {
                 def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
 
                 if (currentCommit == latestRemoteCommit) {
-                    echo "No new commits detected in the sample-flask directory."
+                    error "No new commits detected in the sample-flask directory."
                     currentBuild.result = 'SUCCESS' // Set build result to 'SUCCESS'
                 } else {
-                    error "New commits detected in the sample-flask directory. Aborting the pipeline."
+                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
                 }
             }
         }
     }
 }
+
 
         stage('Upload to Docker Hub') {
             steps {
