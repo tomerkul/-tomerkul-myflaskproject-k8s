@@ -26,7 +26,7 @@ pipeline {
     steps {
         script {
             def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
-
+            
             // Enter the sample-flask directory
             dir(sampleFlaskDir) {
                 // Fetch the latest commits from the remote repository
@@ -48,6 +48,7 @@ pipeline {
         }
     }
 }
+
 
 
 
