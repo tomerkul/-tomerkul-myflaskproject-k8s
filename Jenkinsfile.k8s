@@ -8,34 +8,30 @@ pipeline {
         stage('Check for New Commits') {
     steps {
         script {
-            def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
+            def localSampleFlaskDir = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask"
+            def remoteSampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
 
-            // Enter the sample-flask directory
-            dir(sampleFlaskDir) {
-                // Fetch the latest commits from the remote repository
-                sh 'git fetch origin'
+            // Fetch the latest commits from the remote repository
+            sh "git fetch origin"
 
-                // Get the latest commit hash of the current branch
-                def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+            // Get the latest commit hash of the current branch
+            def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
 
-                // Get the latest commit hash from the remote branch (origin/main)
-                def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
+            // Use 'git diff' to check for changes between local and remote sample-flask directories
+            def diff = sh(returnStatus: true, script: "git diff ${currentCommit}:${localSampleFlaskDir} origin/main:${remoteSampleFlaskDir}")
 
-                // Use 'git diff' to check for changes between local and remote sample-flask directories
-                def diff = sh(returnStatus: true, script: "git diff tomerkul-myflaskproject-k8s/ https://github.com/tomerkul/tomerkul-myflaskproject-k8s.git:${sampleFlaskDir}")
-
-                if (diff != 0) {
-                    // Changes detected
-                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
-                } else {
-                    // No changes detected
-                    echo "No new commits detected in the sample-flask directory."
-                    error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
-                }
+            if (diff != 0) {
+                // Changes detected
+                echo "New commits detected in the sample-flask directory. Continuing to the next stage."
+            } else {
+                // No changes detected
+                echo "No new commits detected in the sample-flask directory."
+                error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
             }
         }
     }
 }
+
 
         stage('Cleanup') {
             steps {
