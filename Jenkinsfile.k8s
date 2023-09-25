@@ -22,7 +22,24 @@ pipeline {
                 sh 'ls'
             }
         }
+        stage('Check for Changes') {
+            steps {
+                script {
+                    // Define the path to the sample-flask directory
+                    def sampleFlaskDir = "/var/lib/jenkins/workspace/first_pipeline-k8s/tomerkul-myflaskproject-k8s/sample-flask"
 
+                    // Check if there are any changes in the sample-flask directory
+                    def hasChanges = sh(returnStatus: true, script: "git --git-dir=${sampleFlaskDir}/.git --work-tree=${sampleFlaskDir} status --porcelain").trim() != ""
+
+                    if (!hasChanges) {
+                        echo "No changes detected in the sample-flask directory."
+                        currentBuild.result = 'SUCCESS'
+                    } else {
+                        echo "Changes detected in the sample-flask directory. Continuing to the next stage."
+                    }
+                }
+            }
+        }
         stage('Upload to Docker Hub') {
             steps {
                 sh ''' 
