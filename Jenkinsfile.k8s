@@ -4,6 +4,36 @@ pipeline {
         pollSCM('*/5 * * * *')
     }
     stages {
+        stage('Check for New Commits') {
+    steps {
+        script {
+            def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
+            
+            // Enter the sample-flask directory
+            dir(sampleFlaskDir) {
+                // Fetch the latest commits from the remote repository
+                sh 'git fetch origin'
+
+                // Get the latest commit hash of the current branch
+                def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+
+                // Get the latest commit hash from the remote branch
+                def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
+
+                // Use 'git diff' to check for changes
+                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit}")
+
+                if (diff == 0) {
+                    echo "No new commits detected in the sample-flask directory."
+                    error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
+                } else {
+                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
+                }
+            }
+        }
+    }
+}
+
         stage('Cleanup') {
             steps {
                 script {
@@ -22,37 +52,6 @@ pipeline {
                 sh 'ls'
             }
         }
-        stage('Check for New Commits') {
-    steps {
-        script {
-            def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
-            
-            // Enter the sample-flask directory
-            dir(sampleFlaskDir) {
-                // Fetch the latest commits from the remote repository
-                sh 'git fetch origin'
-
-                // Get the latest commit hash of the current branch
-                def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-
-                // Get the latest commit hash from the remote branch
-                def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
-
-                if (currentCommit == latestRemoteCommit) {
-                    echo "No new commits detected in the sample-flask directory."
-                    error "No new commits detected. Aborting the pipeline." // Abort the pipeline with an error
-                } else {
-                    echo "New commits detected in the sample-flask directory. Continuing to the next stage."
-                }
-            }
-        }
-    }
-}
-
-
-
-
-
 
         stage('Upload to Docker Hub') {
             steps {
