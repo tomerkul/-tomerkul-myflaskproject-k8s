@@ -21,8 +21,8 @@ pipeline {
                 // Get the latest commit hash from the remote branch (origin/main)
                 def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
 
-                // Use 'git diff' to check for changes between main and origin/main
-                def diff = sh(returnStatus: true, script: "git diff ${currentCommit} ${latestRemoteCommit} ${currentCommit}:${sampleFlaskDir} ${latestRemoteCommit}:${sampleFlaskDir}")
+                // Use 'git diff' to check for changes between local and remote sample-flask directories
+                def diff = sh(returnStatus: true, script: "git diff ${currentCommit}:${sampleFlaskDir} ${latestRemoteCommit}:${sampleFlaskDir}")
 
                 if (diff != 0) {
                     // Changes detected
@@ -36,10 +36,6 @@ pipeline {
         }
     }
 }
-
-
-
-
 
         stage('Cleanup') {
             steps {
