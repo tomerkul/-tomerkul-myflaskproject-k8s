@@ -22,21 +22,27 @@ pipeline {
                 sh 'ls'
             }
         }
-        stage('Check for Changes') {
+        stage('Check for New Commits') {
             steps {
                 script {
                     def sampleFlaskDir = "tomerkul-myflaskproject-k8s/sample-flask"
 
                     // Enter the sample-flask directory
                     dir(sampleFlaskDir) {
-                        // Use 'git status' to check for changes
-                        def hasChanges = sh(returnStatus: true, script: 'git status --porcelain').trim() != ''
+                        // Fetch the latest commits from the remote repository
+                        sh 'git fetch origin'
 
-                        if (!hasChanges) {
-                            echo "No changes detected in the sample-flask directory."
+                        // Get the latest commit hash of the current branch
+                        def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+
+                        // Get the latest commit hash from the remote branch
+                        def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
+
+                        if (currentCommit == latestRemoteCommit) {
+                            echo "No new commits detected in the sample-flask directory."
                             currentBuild.result = 'SUCCESS'
                         } else {
-                            echo "Changes detected in the sample-flask directory. Continuing to the next stage."
+                            echo "New commits detected in the sample-flask directory. Continuing to the next stage."
                         }
                     }
                 }
