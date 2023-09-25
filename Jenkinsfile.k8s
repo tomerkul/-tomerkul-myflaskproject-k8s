@@ -39,8 +39,8 @@ pipeline {
                 def latestRemoteCommit = sh(returnStdout: true, script: 'git rev-parse origin/main').trim()
 
                 if (currentCommit == latestRemoteCommit) {
-                    error "No new commits detected in the sample-flask directory."
-                    currentBuild.result = 'SUCCESS' // Set build result to 'SUCCESS'
+                    echo "No new commits detected in the sample-flask directory."
+                     currentBuild.getRawBuild().getExecutor().interrupt(Result.SUCCESS)
                 } else {
                     echo "New commits detected in the sample-flask directory. Continuing to the next stage."
                 }
